@@ -1,0 +1,26 @@
+﻿<Window x:Class="Mooseware.DvarDeputy.ViewerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Mooseware.DvarDeputy"
+        mc:Ignorable="d"
+        Title="D'var Deputy Viewer" Height="450" Width="800"
+        Closing="Window_Closing"
+        SizeChanged="Window_SizeChanged">
+    <Grid x:Name="ContainerGrid" 
+          Margin="8 8 8 8">
+        <Canvas x:Name="Prompter1Canvas">
+            <Image x:Name="Prompter1Image"/>
+            <Rectangle x:Name="ProgressBugRectangle"
+                       Fill="Gray"
+                       Canvas.Top="10"
+                       Canvas.Left="100"
+                       Height="10"
+                       Width="100"
+                       RadiusX="5"
+                       RadiusY="5"
+                       Visibility="Hidden" />
+        </Canvas>
+    </Grid>
+</Window>

@@ -1,0 +1,102 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Mooseware.DvarDeputy.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="ViewerWindowLocation" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">0, 0</Value>
+    </Setting>
+    <Setting Name="ViewerWindowSize" Type="System.Drawing.Size" Scope="User">
+      <Value Profile="(Default)">0, 0</Value>
+    </Setting>
+    <Setting Name="TimerFrequency" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="LowerScrollLimit" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">-3</Value>
+    </Setting>
+    <Setting Name="UpperScrollLimit" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">3</Value>
+    </Setting>
+    <Setting Name="ControlWindowLocation" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">0, 0</Value>
+    </Setting>
+    <Setting Name="ControlWindowSize" Type="System.Drawing.Size" Scope="User">
+      <Value Profile="(Default)">0, 0</Value>
+    </Setting>
+    <Setting Name="RestoreWindowLocations" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="LowerFontSizeLimit" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">6</Value>
+    </Setting>
+    <Setting Name="UpperFontSizeLimit" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">100</Value>
+    </Setting>
+    <Setting Name="UpperHorizontalMarginLimit" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">300</Value>
+    </Setting>
+    <Setting Name="UpperLineSpacingLimit" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">5</Value>
+    </Setting>
+    <Setting Name="LastFontSize" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">32</Value>
+    </Setting>
+    <Setting Name="LastHorizontalMargin" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">30</Value>
+    </Setting>
+    <Setting Name="LastLineSpacing" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="LastScrollVelocity" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0.5</Value>
+    </Setting>
+    <Setting Name="LastTypeface" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Verdana</Value>
+    </Setting>
+    <Setting Name="LastSourceFile" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\Users\joelb\OneDrive\Desktop\TestDvar.docx</Value>
+    </Setting>
+    <Setting Name="ReopenLastContent" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="UpgradeRequired" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="DefaultScrollVelocity" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0.2</Value>
+    </Setting>
+    <Setting Name="DefaultFontSize" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">32</Value>
+    </Setting>
+    <Setting Name="DefaultHorizontalMargin" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">30</Value>
+    </Setting>
+    <Setting Name="DefaultLineSpacing" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="WebApiUrlRoot" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">http://localhost</Value>
+    </Setting>
+    <Setting Name="WebApiUrlPort" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">1836</Value>
+    </Setting>
+    <Setting Name="VisualTheme" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Light</Value>
+    </Setting>
+    <Setting Name="ProgressBug" Type="System.String" Scope="User">
+      <Value Profile="(Default)">None</Value>
+    </Setting>
+    <Setting Name="AtemIpAddress" Type="System.String" Scope="User">
+      <Value Profile="(Default)">192.168.0.240</Value>
+    </Setting>
+    <Setting Name="ViewerAtemInput" Type="System.String" Scope="User">
+      <Value Profile="(Default)">PC4</Value>
+    </Setting>
+    <Setting Name="ShowViewerWhenMaximized" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="ViewerAtemOutput" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">PVW</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

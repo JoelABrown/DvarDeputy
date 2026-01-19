@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36221.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DvarDeputy", "DvarDeputy\DvarDeputy.csproj", "{CA4844DE-163F-4012-9AA9-8734D660356B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AtemApi", "AtemApi\AtemApi.csproj", "{E9F109F0-A16A-D052-3386-6BBBC15C0397}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CA4844DE-163F-4012-9AA9-8734D660356B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA4844DE-163F-4012-9AA9-8734D660356B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA4844DE-163F-4012-9AA9-8734D660356B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA4844DE-163F-4012-9AA9-8734D660356B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9F109F0-A16A-D052-3386-6BBBC15C0397}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9F109F0-A16A-D052-3386-6BBBC15C0397}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9F109F0-A16A-D052-3386-6BBBC15C0397}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9F109F0-A16A-D052-3386-6BBBC15C0397}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8407DCDC-8564-4022-ACEE-D15C86DDBD32}
+	EndGlobalSection
+EndGlobal
