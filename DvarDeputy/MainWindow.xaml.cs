@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Mooseware.Tachnit.AtemApi;
+using Microsoft.Extensions.Options;
+using Mooseware.DvarDeputy.Configuration;
 using Mooseware.DvarDeputy.Controls;
+using Mooseware.Tachnit.AtemApi;
 using System.Collections.Concurrent;
 using System.Drawing.Text;
 using System.IO;
@@ -15,8 +17,8 @@ using System.Windows.Threading;
 
 namespace Mooseware.DvarDeputy;
 
-// TODO: NEXT: Figure out if there's a way to track the starting fragment index so that a rapid invocation of font or spacing or
-//             margin changes (or font type?) don't miss the point of freezing the fragment idx 
+// TODO: Figure out if there's a way to track the starting fragment index so that a rapid invocation of font or spacing or
+//       margin changes (or font type?) don't miss the point of freezing the fragment idx 
 // TODO: When numbering schemes have a starting number take that into account (maybe a version X feature?)
 // TODO: Determine if fancy background painting is required of if just painting in chunks in the main UI thread is good enough
 // TODO: Follow up in these URLs if fancier background painting is required:
@@ -41,6 +43,8 @@ public partial class MainWindow : Window
     /// Host for listening to HTTP API calls (for example, from a Companion-powered Stream Deck)
     /// </summary>
     private readonly IHost _host;
+
+    private readonly AppSettings _appSettings;
 
     /// <summary>
     /// Timer for ticking through a loop to look for queued messages
@@ -76,7 +80,7 @@ public partial class MainWindow : Window
     /// Base constructor for the MainWindow
     /// </summary>
     /// <param name="msgQueue">ConcurrentQueue<ApiMessage> for the HTTP API injected via DI</param>
-    public MainWindow(ConcurrentQueue<ApiMessage> msgQueue)
+    public MainWindow(ConcurrentQueue<ApiMessage> msgQueue, IOptions<Configuration.AppSettings> appSettings)
     {
         InitializeComponent();
         _loading = true;
@@ -84,6 +88,8 @@ public partial class MainWindow : Window
 
         // Set the local reference to the (singleton) ConcurrentQueue for the UI thread.
         _messageQueue = msgQueue;
+
+        _appSettings = appSettings.Value;
 
         // Set up the heartbeat time that watches for incoming HTTP requests
         _heartbeat = new DispatcherTimer
@@ -93,26 +99,25 @@ public partial class MainWindow : Window
         _heartbeat.Tick += Heartbeat_Tick;
 
         // Restore any settings from the previous session and load application settings...
-        if (Properties.Settings.Default.UpgradeRequired)
+        if (Config.User.UpgradeRequired)
         {
-            Properties.Settings.Default.Upgrade();
-            Properties.Settings.Default.UpgradeRequired = false;
-            Properties.Settings.Default.Save();
+            Config.User.Upgrade();
+            Config.User.UpgradeRequired = false;
+            Config.User.Save();
         }
-        Properties.Settings.Default.Reload();
+        Config.User.Reload();
 
         // Get a connection to the ATEM switcher
-        string atemIpAddress = Properties.Settings.Default.AtemIpAddress;
+        string atemIpAddress = Config.User.AtemIpAddress;
         if (atemIpAddress is null || atemIpAddress.Length == 0)
         {
             atemIpAddress = "192.168.1.240";    // Apply a default
         }
         ConnectToAtem(atemIpAddress);
 
-
         //Get the base URL for .UseUrls() from the App.config settings file
-        string webApiRootUrl = Properties.Settings.Default.WebApiUrlRoot;
-        string webApiUrlPort = Properties.Settings.Default.WebApiUrlPort;
+        string webApiRootUrl = _appSettings.WebApiUrlRoot;
+        string webApiUrlPort = _appSettings.WebApiUrlPort;
 
         // Create the background Web API server running within this WPF app...
         var builder = Host.CreateDefaultBuilder()
@@ -137,18 +142,18 @@ public partial class MainWindow : Window
         FillFontsComboBox();
 
         // Apply application control settings (and their related user control settings)
-        _viewerWindow.SetTimerTickInterval(Properties.Settings.Default.TimerFrequency);
-        ScrollSpeedSlider.Minimum = Properties.Settings.Default.LowerScrollLimit;
-        ScrollSpeedSlider.Maximum = Properties.Settings.Default.UpperScrollLimit;
-        ScrollSpeedSlider.Value = Properties.Settings.Default.LastScrollVelocity;
-        FontSizeSlider.Minimum = Properties.Settings.Default.LowerFontSizeLimit;
-        FontSizeSlider.Maximum = Properties.Settings.Default.UpperFontSizeLimit;
-        FontSizeSlider.Value = Properties.Settings.Default.LastFontSize;
-        SideMarginSlider.Maximum = Properties.Settings.Default.UpperHorizontalMarginLimit;
-        SideMarginSlider.Value = Properties.Settings.Default.LastHorizontalMargin;
-        LineSpacingSlider.Maximum = Properties.Settings.Default.UpperLineSpacingLimit;
-        LineSpacingSlider.Value = Properties.Settings.Default.LastLineSpacing;
-        if (Enum.TryParse<ViewerWindow.VisualTheme>(Properties.Settings.Default.VisualTheme, out var visualTheme))
+        _viewerWindow.SetTimerTickInterval(_appSettings.TimerFrequency);
+        ScrollSpeedSlider.Minimum = _appSettings.LowerScrollLimit;
+        ScrollSpeedSlider.Maximum = _appSettings.UpperScrollLimit;
+        ScrollSpeedSlider.Value = Config.User.LastScrollVelocity;
+        FontSizeSlider.Minimum = _appSettings.LowerFontSizeLimit;
+        FontSizeSlider.Maximum = _appSettings.UpperFontSizeLimit;
+        FontSizeSlider.Value = Config.User.LastFontSize;
+        SideMarginSlider.Maximum = _appSettings.UpperHorizontalMarginLimit;
+        SideMarginSlider.Value = Config.User.LastHorizontalMargin;
+        LineSpacingSlider.Maximum = _appSettings.UpperSpacingLimit;
+        LineSpacingSlider.Value = Config.User.LastLineSpacing;
+        if (Enum.TryParse<ViewerWindow.VisualTheme>(Config.User.VisualTheme, out var visualTheme))
         {
             switch (visualTheme)
             {
@@ -170,7 +175,7 @@ public partial class MainWindow : Window
         {
             ThemeLightRadioButton.IsChecked = true;
         }
-        if (Enum.TryParse<ViewerWindow.ProgressBug>(Properties.Settings.Default.ProgressBug, out var progressBug))
+        if (Enum.TryParse<ViewerWindow.ProgressBug>(Config.User.ProgressBug, out var progressBug))
         {
             switch (progressBug)
             {
@@ -194,26 +199,26 @@ public partial class MainWindow : Window
         }
 
         // Apply content and view user settings.
-        RestoreWindowLocationsCheckbox.IsChecked = Properties.Settings.Default.RestoreWindowLocations;
-        if (Properties.Settings.Default.RestoreWindowLocations)
+        RestoreWindowLocationsCheckbox.IsChecked = Config.User.RestoreWindowLocations;
+        if (Config.User.RestoreWindowLocations)
         {
-            this.Width = Properties.Settings.Default.ControlWindowSize.Width;
-            this.Height = Properties.Settings.Default.ControlWindowSize.Height;
-            this.Top = Properties.Settings.Default.ControlWindowLocation.Y;
-            this.Left = Properties.Settings.Default.ControlWindowLocation.X;
-            _viewerWindow.Width = Properties.Settings.Default.ViewerWindowSize.Width;
-            _viewerWindow.Height = Properties.Settings.Default.ViewerWindowSize.Height;
-            _viewerWindow.Top = Properties.Settings.Default.ViewerWindowLocation.Y;
-            _viewerWindow.Left = Properties.Settings.Default.ViewerWindowLocation.X;
+            this.Width = Config.User.ControlWindowSize.Width;
+            this.Height = Config.User.ControlWindowSize.Height;
+            this.Top = Config.User.ControlWindowLocation.Y;
+            this.Left = Config.User.ControlWindowLocation.X;
+            _viewerWindow.Width = Config.User.ViewerWindowSize.Width;
+            _viewerWindow.Height = Config.User.ViewerWindowSize.Height;
+            _viewerWindow.Top = Config.User.ViewerWindowLocation.Y;
+            _viewerWindow.Left = Config.User.ViewerWindowLocation.X;
         }
         _viewerWindow.Show();
         _viewerWindow.SetViewerMode(ViewerWindow.ViewerMode.Normal);
         RestoreViewerRadioButton.IsChecked = true;
 
-        ReopenLastContentCheckbox.IsChecked = Properties.Settings.Default.ReopenLastContent;
-        if (Properties.Settings.Default.ReopenLastContent)
+        ReopenLastContentCheckbox.IsChecked = Config.User.ReopenLastContent;
+        if (Config.User.ReopenLastContent)
         {
-            ContentFilespecTextBox.Text = Properties.Settings.Default.LastSourceFile;
+            ContentFilespecTextBox.Text = Config.User.LastSourceFile;
             _viewerWindow.LoadContentFromFile(ContentFilespecTextBox.Text);
         }
 
@@ -226,7 +231,7 @@ public partial class MainWindow : Window
             AtemInputsComboBox.IsEnabled = true;
             // Fill the inputs combo box
             AtemInputsComboBox.ItemsSource = _atemSwitcher.GetInputShortNames(AtemSwitcherPortType.External);
-            int selectedIdx = AtemInputsComboBox.Items.IndexOf(Properties.Settings.Default.ViewerAtemInput);
+            int selectedIdx = AtemInputsComboBox.Items.IndexOf(Config.User.ViewerAtemInput);
             if (selectedIdx >= 0)
             {
                 AtemInputsComboBox.SelectedIndex = selectedIdx;
@@ -240,7 +245,7 @@ public partial class MainWindow : Window
         {
             AtemApiStatusLed.SelectedColour = LightEmittingDiode.ColourOptions.Red;
             AtemInputsComboBox.IsEnabled = false;
-            AtemIpAddressTextBox.Text = Properties.Settings.Default.AtemIpAddress ?? string.Empty;
+            AtemIpAddressTextBox.Text = Config.User.AtemIpAddress ?? string.Empty;
         }
 
         // Show the current application version number and copyright notice.
@@ -274,49 +279,49 @@ public partial class MainWindow : Window
         _host.Dispose();
 
         // Save settings as appropriate...
-        if (Properties.Settings.Default.RestoreWindowLocations)
+        if (Config.User.RestoreWindowLocations)
         {
-            Properties.Settings.Default.ControlWindowLocation
+            Config.User.ControlWindowLocation
                 = new System.Drawing.Point(Convert.ToInt32(this.Left), Convert.ToInt32(this.Top));
-            Properties.Settings.Default.ControlWindowSize
+            Config.User.ControlWindowSize
                 = new System.Drawing.Size(Convert.ToInt32(this.Width), Convert.ToInt32(this.Height));
             if (_viewerWindow.WindowState != WindowState.Minimized)
             {
-                Properties.Settings.Default.ViewerWindowLocation
+                Config.User.ViewerWindowLocation
                     = new System.Drawing.Point(Convert.ToInt32(_viewerWindow.Left), Convert.ToInt32(_viewerWindow.Top));
-                Properties.Settings.Default.ViewerWindowSize
+                Config.User.ViewerWindowSize
                     = new System.Drawing.Size(Convert.ToInt32(_viewerWindow.Width), Convert.ToInt32(_viewerWindow.Height));
             }
         }
 
-        Properties.Settings.Default.LastFontSize = _viewerWindow.FontSizeEms;
-        Properties.Settings.Default.LastHorizontalMargin = _viewerWindow.HorizontalMargin;
-        Properties.Settings.Default.LastLineSpacing = _viewerWindow.LineSpacing;
-        Properties.Settings.Default.LastScrollVelocity = _viewerWindow.ScrollVelocity;
-        Properties.Settings.Default.LastTypeface = _viewerWindow.Typeface;
+        Config.User.LastFontSize = _viewerWindow.FontSizeEms;
+        Config.User.LastHorizontalMargin = _viewerWindow.HorizontalMargin;
+        Config.User.LastLineSpacing = _viewerWindow.LineSpacing;
+        Config.User.LastScrollVelocity = _viewerWindow.ScrollVelocity;
+        Config.User.LastTypeface = _viewerWindow.Typeface;
 
-        if (Properties.Settings.Default.ReopenLastContent)
+        if (Config.User.ReopenLastContent)
         {
-            Properties.Settings.Default.LastSourceFile = _viewerWindow.PrompterContentFilespec;
+            Config.User.LastSourceFile = _viewerWindow.PrompterContentFilespec;
         }
         else
         {
-            Properties.Settings.Default.LastSourceFile = string.Empty;
+            Config.User.LastSourceFile = string.Empty;
         }
 
         ViewerWindow.VisualTheme visualTheme = ViewerWindow.VisualTheme.Light;
         if (ThemeLightRadioButton.IsChecked == true) visualTheme = ViewerWindow.VisualTheme.Light;
         if (ThemeDarkRadioButton.IsChecked == true) visualTheme = ViewerWindow.VisualTheme.Dark;
         if (ThemeMatrixRadioButton.IsChecked == true) visualTheme = ViewerWindow.VisualTheme.Matrix;
-        Properties.Settings.Default.VisualTheme = visualTheme.ToString();
+        Config.User.VisualTheme = visualTheme.ToString();
 
         ViewerWindow.ProgressBug progressBug = ViewerWindow.ProgressBug.None;
         if (ProgressBugNoneRadioButton.IsChecked == true) progressBug = ViewerWindow.ProgressBug.None;
         if (ProgressBugSideRadioButton.IsChecked == true) progressBug = ViewerWindow.ProgressBug.RightSide;
         if (ProgressBugBottomRadioButton.IsChecked == true) progressBug = ViewerWindow.ProgressBug.Bottom;
-        Properties.Settings.Default.ProgressBug = progressBug.ToString();
+        Config.User.ProgressBug = progressBug.ToString();
 
-        Properties.Settings.Default.Save();
+        Config.User.Save();
 
         _viewerWindow.ShutDownViewer();
 
@@ -476,7 +481,7 @@ public partial class MainWindow : Window
             FontFamilyComboBox.Items.Add(font.Name);
         }
         // Make an initial selection
-        string lastUsedTypeface = Properties.Settings.Default.LastTypeface;
+        string lastUsedTypeface = Config.User.LastTypeface;
         if (FontFamilyComboBox.Items.Contains(lastUsedTypeface))
         {
             FontFamilyComboBox.SelectedItem = lastUsedTypeface;
@@ -491,7 +496,7 @@ public partial class MainWindow : Window
     {
         if (!_loading)
         {
-            Properties.Settings.Default.RestoreWindowLocations = (bool)(RestoreWindowLocationsCheckbox.IsChecked ?? false);
+            Config.User.RestoreWindowLocations = (bool)(RestoreWindowLocationsCheckbox.IsChecked ?? false);
         }
     }
 
@@ -499,7 +504,7 @@ public partial class MainWindow : Window
     {
         if (!_loading)
         {
-            Properties.Settings.Default.ReopenLastContent = (bool)(ReopenLastContentCheckbox.IsChecked ?? false);
+            Config.User.ReopenLastContent = (bool)(ReopenLastContentCheckbox.IsChecked ?? false);
         }
     }
 
@@ -560,22 +565,22 @@ public partial class MainWindow : Window
 
     private void FontSizeResetButton_Click(object sender, RoutedEventArgs e)
     {
-        FontSizeSlider.Value = Properties.Settings.Default.DefaultFontSize;
+        FontSizeSlider.Value = _appSettings.DefaultFontSize;
     }
 
     private void SideMarginResetButton_Click(object sender, RoutedEventArgs e)
     {
-        SideMarginSlider.Value = Properties.Settings.Default.DefaultHorizontalMargin;
+        SideMarginSlider.Value = _appSettings.DefaultHorizontalMargin;
     }
 
     private void LineSpacingResetButton_Click(object sender, RoutedEventArgs e)
     {
-        LineSpacingSlider.Value = Properties.Settings.Default.DefaultLineSpacing;
+        LineSpacingSlider.Value = _appSettings.DefaultLineSpacing;
     }
 
     private void ScrollSpeedResetButton_Click(object sender, RoutedEventArgs e)
     {
-        ScrollSpeedSlider.Value = Properties.Settings.Default.DefaultScrollVelocity;
+        ScrollSpeedSlider.Value = _appSettings.DefaultScrollVelocity;
     }
 
     private void ViewerViewModeOption_Click(object sender, RoutedEventArgs e)
@@ -599,7 +604,7 @@ public partial class MainWindow : Window
                     _viewerWindow.SetViewerMode(ViewerWindow.ViewerMode.Fullscreen);
                     if (ViewerShownCheckBox is not null)
                     {
-                        ViewerShownCheckBox.IsChecked = Properties.Settings.Default.ShowViewerWhenMaximized;
+                        ViewerShownCheckBox.IsChecked = Config.User.ShowViewerWhenMaximized;
                         ViewerShownCheckBox.IsEnabled = true;
                     }
                     break;
@@ -641,7 +646,7 @@ public partial class MainWindow : Window
         else
         {
             // Make a note for next time.
-            Properties.Settings.Default.ShowViewerWhenMaximized = (bool)ViewerShownCheckBox.IsChecked;
+            Config.User.ShowViewerWhenMaximized = (bool)ViewerShownCheckBox.IsChecked;
 
             // Show or hide the ViewerWindow in the ATEM depending on the current selection
             if (ViewerShownCheckBox.IsChecked == true)
@@ -668,19 +673,19 @@ public partial class MainWindow : Window
             if (show)
             {
                 // Note what input is being routed so that it can be restored when the viewer is hidden.
-                switch (Properties.Settings.Default.ViewerAtemOutput.ToUpper().Trim())
+                switch (_appSettings.ViewerAtemOutput.ToUpper().Trim())
                 {
                     case "AUX":
                         _switcherInputToRestore = _atemSwitcher.GetAuxInput().ShortName;
-                        _atemSwitcher.SetAuxInput(Properties.Settings.Default.ViewerAtemInput);
+                        _atemSwitcher.SetAuxInput(Config.User.ViewerAtemInput);
                         break;
                     case "PGM":
                         _switcherInputToRestore = _atemSwitcher.GetProgramInput().ShortName;
-                        _atemSwitcher.SetProgramInput(Properties.Settings.Default.ViewerAtemInput);
+                        _atemSwitcher.SetProgramInput(Config.User.ViewerAtemInput);
                         break;
                     case "PVW":
                         _switcherInputToRestore = _atemSwitcher.GetPreviewInput().ShortName;
-                        _atemSwitcher.SetPreviewInput(Properties.Settings.Default.ViewerAtemInput);
+                        _atemSwitcher.SetPreviewInput(Config.User.ViewerAtemInput);
                         break;
                     default:
                         // Nothing to do. This is an unknown output
@@ -689,7 +694,7 @@ public partial class MainWindow : Window
             }
             else
             {
-                switch (Properties.Settings.Default.ViewerAtemOutput.ToUpper().Trim())
+                switch (_appSettings.ViewerAtemOutput.ToUpper().Trim())
                 {
                     case "AUX":
                         _atemSwitcher.SetAuxInput(_switcherInputToRestore);
@@ -832,7 +837,7 @@ public partial class MainWindow : Window
                         // Can we increase the font by the requested amount?
                         // If so do it. Otherwise go as high as settings will allow.
                         newScalarValue = Math.Round(Math.Min(FontSizeSlider.Value + message.Scalar,
-                            Properties.Settings.Default.UpperFontSizeLimit), 2);
+                            _appSettings.UpperFontSizeLimit), 2);
                         FontSizeSlider.Value = newScalarValue;
                         flashMessage = "Increase font size to " + newScalarValue.ToString();
                         break;
@@ -840,12 +845,12 @@ public partial class MainWindow : Window
                         // Can we decrease the font by the requested amount?
                         // If so do it. Otherwise go as low as settings will allow.
                         newScalarValue = Math.Round(Math.Max(FontSizeSlider.Value - message.Scalar,
-                            Properties.Settings.Default.LowerFontSizeLimit), 2);
+                            _appSettings.LowerFontSizeLimit), 2);
                         FontSizeSlider.Value = newScalarValue;
                         flashMessage = "Decrease font size to " + newScalarValue.ToString();
                         break;
                     case ApiMessage.FontReset:
-                        FontSizeSlider.Value = Properties.Settings.Default.DefaultFontSize;
+                        FontSizeSlider.Value = _appSettings.DefaultFontSize;
                         flashMessage = "Reset font size to default";
                         break;
                     default:
@@ -859,7 +864,7 @@ public partial class MainWindow : Window
                         // Can we increase the ScrollSpeed by the requested amount?
                         // If so do it. Otherwise go as high as settings will allow.
                         newScalarValue = Math.Round(Math.Min(ScrollSpeedSlider.Value + message.Scalar,
-                            Properties.Settings.Default.UpperScrollLimit), 2);
+                            _appSettings.UpperScrollLimit), 2);
                         ScrollSpeedSlider.Value = newScalarValue;
                         flashMessage = "Increase ScrollSpeed  to " + newScalarValue.ToString();
                         break;
@@ -867,12 +872,12 @@ public partial class MainWindow : Window
                         // Can we decrease the ScrollSpeed by the requested amount?
                         // If so do it. Otherwise go as low as settings will allow.
                         newScalarValue = Math.Round(Math.Max(ScrollSpeedSlider.Value - message.Scalar,
-                            Properties.Settings.Default.LowerScrollLimit), 2);
+                            _appSettings.LowerScrollLimit), 2);
                         ScrollSpeedSlider.Value = newScalarValue;
                         flashMessage = "Decrease Scroll Speed to " + newScalarValue.ToString();
                         break;
                     case ApiMessage.ScrollSpeedReset:
-                        ScrollSpeedSlider.Value = Properties.Settings.Default.DefaultScrollVelocity;
+                        ScrollSpeedSlider.Value = _appSettings.DefaultScrollVelocity;
                         flashMessage = "Reset Scroll Speed to default";
                         break;
                     default:
@@ -886,7 +891,7 @@ public partial class MainWindow : Window
                         // Can we increase the Spacing by the requested amount?
                         // If so do it. Otherwise go as high as settings will allow.
                         newScalarValue = Math.Round(Math.Min(LineSpacingSlider.Value + message.Scalar,
-                            Properties.Settings.Default.UpperLineSpacingLimit), 2);
+                            _appSettings.UpperSpacingLimit), 2);
                         LineSpacingSlider.Value = newScalarValue;
                         flashMessage = "Increase Line Spacing to " + newScalarValue.ToString();
                         break;
@@ -898,7 +903,7 @@ public partial class MainWindow : Window
                         flashMessage = "Decrease Line Spacing to " + newScalarValue.ToString();
                         break;
                     case ApiMessage.SpacingReset:
-                        LineSpacingSlider.Value = Properties.Settings.Default.DefaultLineSpacing;
+                        LineSpacingSlider.Value = _appSettings.DefaultLineSpacing;
                         flashMessage = "Reset Line Spacing to default";
                         break;
                     default:
@@ -912,7 +917,7 @@ public partial class MainWindow : Window
                         // Can we increase the Margin by the requested amount?
                         // If so do it. Otherwise go as high as settings will allow.
                         newScalarValue = Math.Round(Math.Min(SideMarginSlider.Value + message.Scalar,
-                            Properties.Settings.Default.UpperHorizontalMarginLimit), 2);
+                            _appSettings.UpperHorizontalMarginLimit), 2);
                         SideMarginSlider.Value = newScalarValue;
                         flashMessage = "Increase Horizontal Margin to " + newScalarValue.ToString();
                         break;
@@ -924,7 +929,7 @@ public partial class MainWindow : Window
                         flashMessage = "Decrease Horizontal Margin to " + newScalarValue.ToString();
                         break;
                     case ApiMessage.MarginReset:
-                        SideMarginSlider.Value = Properties.Settings.Default.DefaultHorizontalMargin;
+                        SideMarginSlider.Value = _appSettings.DefaultHorizontalMargin;
                         flashMessage = "Reset Horizontal Margin to default";
                         break;
                     default:
@@ -1057,7 +1062,7 @@ public partial class MainWindow : Window
                 AtemInputsComboBox.IsEnabled = true;
                 // Fill the inputs combo box
                 AtemInputsComboBox.ItemsSource = _atemSwitcher.GetInputShortNames(AtemSwitcherPortType.External);
-                ComboBoxItem item = (ComboBoxItem)AtemInputsComboBox.FindName(Properties.Settings.Default.ViewerAtemInput);
+                ComboBoxItem item = (ComboBoxItem)AtemInputsComboBox.FindName(Config.User.ViewerAtemInput);
                 if (item is not null)
                 {
                     AtemInputsComboBox.SelectedItem = item;
@@ -1066,7 +1071,7 @@ public partial class MainWindow : Window
                 {
                     AtemInputsComboBox.SelectedIndex = 0;
                 }
-                Properties.Settings.Default.AtemIpAddress = atemIpAddress;
+                Config.User.AtemIpAddress = atemIpAddress;
             }
             else
             {
@@ -1080,7 +1085,7 @@ public partial class MainWindow : Window
     {
         if (!_loading && AtemInputsComboBox.SelectedItem is not null)
         {
-            Properties.Settings.Default.ViewerAtemInput = AtemInputsComboBox.SelectedItem.ToString();
+            Config.User.ViewerAtemInput = AtemInputsComboBox.SelectedItem.ToString();
         }
     }
 

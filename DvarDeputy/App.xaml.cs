@@ -1,8 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Collections.Concurrent;
-using System.Configuration;
-using System.Data;
 using System.Windows;
 
 namespace Mooseware.DvarDeputy;
@@ -21,6 +19,7 @@ public partial class App : Application
         AppHost = (IHost?)Host.CreateDefaultBuilder()
         .ConfigureServices((hostContext, services) =>
         {
+            services.Configure<Configuration.AppSettings>(hostContext.Configuration.GetSection("ApplicationSettings"));
             services.AddSingleton<MainWindow>();
             services.AddSingleton<ConcurrentQueue<ApiMessage>>();
         })

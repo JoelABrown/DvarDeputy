@@ -47,33 +47,6 @@ namespace Mooseware.DvarDeputy.Properties {
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public int TimerFrequency {
-            get {
-                return ((int)(this["TimerFrequency"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("-3")]
-        public double LowerScrollLimit {
-            get {
-                return ((double)(this["LowerScrollLimit"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("3")]
-        public double UpperScrollLimit {
-            get {
-                return ((double)(this["UpperScrollLimit"]));
-            }
-        }
-        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0, 0")]
@@ -107,42 +80,6 @@ namespace Mooseware.DvarDeputy.Properties {
             }
             set {
                 this["RestoreWindowLocations"] = value;
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("6")]
-        public double LowerFontSizeLimit {
-            get {
-                return ((double)(this["LowerFontSizeLimit"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("100")]
-        public double UpperFontSizeLimit {
-            get {
-                return ((double)(this["UpperFontSizeLimit"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("300")]
-        public double UpperHorizontalMarginLimit {
-            get {
-                return ((double)(this["UpperHorizontalMarginLimit"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("5")]
-        public double UpperLineSpacingLimit {
-            get {
-                return ((double)(this["UpperLineSpacingLimit"]));
             }
         }
         
@@ -244,72 +181,6 @@ namespace Mooseware.DvarDeputy.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0.2")]
-        public double DefaultScrollVelocity {
-            get {
-                return ((double)(this["DefaultScrollVelocity"]));
-            }
-            set {
-                this["DefaultScrollVelocity"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("32")]
-        public double DefaultFontSize {
-            get {
-                return ((double)(this["DefaultFontSize"]));
-            }
-            set {
-                this["DefaultFontSize"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("30")]
-        public double DefaultHorizontalMargin {
-            get {
-                return ((double)(this["DefaultHorizontalMargin"]));
-            }
-            set {
-                this["DefaultHorizontalMargin"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("2")]
-        public double DefaultLineSpacing {
-            get {
-                return ((double)(this["DefaultLineSpacing"]));
-            }
-            set {
-                this["DefaultLineSpacing"] = value;
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost")]
-        public string WebApiUrlRoot {
-            get {
-                return ((string)(this["WebApiUrlRoot"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1836")]
-        public string WebApiUrlPort {
-            get {
-                return ((string)(this["WebApiUrlPort"]));
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Light")]
         public string VisualTheme {
             get {
@@ -365,15 +236,6 @@ namespace Mooseware.DvarDeputy.Properties {
             }
             set {
                 this["ShowViewerWhenMaximized"] = value;
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("PVW")]
-        public string ViewerAtemOutput {
-            get {
-                return ((string)(this["ViewerAtemOutput"]));
             }
         }
     }

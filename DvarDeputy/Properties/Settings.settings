@@ -8,15 +8,6 @@
     <Setting Name="ViewerWindowSize" Type="System.Drawing.Size" Scope="User">
       <Value Profile="(Default)">0, 0</Value>
     </Setting>
-    <Setting Name="TimerFrequency" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">1</Value>
-    </Setting>
-    <Setting Name="LowerScrollLimit" Type="System.Double" Scope="Application">
-      <Value Profile="(Default)">-3</Value>
-    </Setting>
-    <Setting Name="UpperScrollLimit" Type="System.Double" Scope="Application">
-      <Value Profile="(Default)">3</Value>
-    </Setting>
     <Setting Name="ControlWindowLocation" Type="System.Drawing.Point" Scope="User">
       <Value Profile="(Default)">0, 0</Value>
     </Setting>
@@ -25,18 +16,6 @@
     </Setting>
     <Setting Name="RestoreWindowLocations" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="LowerFontSizeLimit" Type="System.Double" Scope="Application">
-      <Value Profile="(Default)">6</Value>
-    </Setting>
-    <Setting Name="UpperFontSizeLimit" Type="System.Double" Scope="Application">
-      <Value Profile="(Default)">100</Value>
-    </Setting>
-    <Setting Name="UpperHorizontalMarginLimit" Type="System.Double" Scope="Application">
-      <Value Profile="(Default)">300</Value>
-    </Setting>
-    <Setting Name="UpperLineSpacingLimit" Type="System.Double" Scope="Application">
-      <Value Profile="(Default)">5</Value>
     </Setting>
     <Setting Name="LastFontSize" Type="System.Double" Scope="User">
       <Value Profile="(Default)">32</Value>
@@ -62,24 +41,6 @@
     <Setting Name="UpgradeRequired" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="DefaultScrollVelocity" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">0.2</Value>
-    </Setting>
-    <Setting Name="DefaultFontSize" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">32</Value>
-    </Setting>
-    <Setting Name="DefaultHorizontalMargin" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">30</Value>
-    </Setting>
-    <Setting Name="DefaultLineSpacing" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">2</Value>
-    </Setting>
-    <Setting Name="WebApiUrlRoot" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">http://localhost</Value>
-    </Setting>
-    <Setting Name="WebApiUrlPort" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">1836</Value>
-    </Setting>
     <Setting Name="VisualTheme" Type="System.String" Scope="User">
       <Value Profile="(Default)">Light</Value>
     </Setting>
@@ -94,9 +55,6 @@
     </Setting>
     <Setting Name="ShowViewerWhenMaximized" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="ViewerAtemOutput" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">PVW</Value>
     </Setting>
   </Settings>
 </SettingsFile>
