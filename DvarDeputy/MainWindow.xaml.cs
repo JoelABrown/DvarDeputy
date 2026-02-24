@@ -44,6 +44,9 @@ public partial class MainWindow : Window
     /// </summary>
     private readonly IHost _host;
 
+    /// <summary>
+    /// Application settings loaded from the appsettings.json file at application startup
+    /// </summary>
     private readonly AppSettings _appSettings;
 
     /// <summary>
@@ -89,6 +92,7 @@ public partial class MainWindow : Window
         // Set the local reference to the (singleton) ConcurrentQueue for the UI thread.
         _messageQueue = msgQueue;
 
+        // Get a DI reference to the appsettings.json configuration data
         _appSettings = appSettings.Value;
 
         // Set up the heartbeat time that watches for incoming HTTP requests
@@ -1097,5 +1101,70 @@ public partial class MainWindow : Window
         }
     }
 
+    private void Window_Activated(object sender, EventArgs e)
+    {
+        // Show keyboard input cues when the window has focus
+        PageBackKeyCue.Visibility = Visibility.Visible;
+        ScrollBackKeyCue.Visibility = Visibility.Visible;
+        StopScrollKeyCue.Visibility = Visibility.Visible;
+        ScrollForwardKeyCue.Visibility = Visibility.Visible;
+        PageForwardKeyCue.Visibility = Visibility.Visible;
+        ScrollSpeedKeyCue.Visibility = Visibility.Visible;
+    }
 
+    private void Window_Deactivated(object sender, EventArgs e)
+    {
+        // Hide keyboard input cues when the window loses focus
+        PageBackKeyCue.Visibility = Visibility.Hidden;
+        ScrollBackKeyCue.Visibility = Visibility.Hidden;
+        StopScrollKeyCue.Visibility = Visibility.Hidden;
+        ScrollForwardKeyCue.Visibility = Visibility.Hidden;
+        PageForwardKeyCue.Visibility = Visibility.Hidden;
+        ScrollSpeedKeyCue.Visibility = Visibility.Hidden;
+    }
+
+    private void Window_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+    {
+        // Handle keyboard shortcuts for the transport keys (etc) for operation
+        // via keyboard at the hosting computer (c.f. via the API)
+        switch (e.Key)
+        {
+            case System.Windows.Input.Key.Left:
+                ScrollBackButton_Click(this, e);
+                e.Handled = true;
+                break;
+            case System.Windows.Input.Key.Right:
+                StartScrollingButton_Click(this, e);
+                e.Handled = true;
+                break;
+            case System.Windows.Input.Key.Up:
+                PageBackButton_Click(this, e);
+                e.Handled = true;
+                break;
+            case System.Windows.Input.Key.Down:
+                PageForwardButton_Click(this, e);
+                e.Handled = true;
+                break;
+            case System.Windows.Input.Key.Space:
+                StopScrollingButton_Click(this, e);
+                e.Handled = true;
+                break;
+            case System.Windows.Input.Key.Add:
+            case System.Windows.Input.Key.OemPlus:
+                if (ScrollSpeedSlider.Value < ScrollSpeedSlider.Maximum)
+                {
+                    ScrollSpeedSlider.Value += _appSettings.KeyboardScrollSpeedIncrement;
+                }
+                e.Handled = true;
+                break;
+            case System.Windows.Input.Key.Subtract:
+            case System.Windows.Input.Key.OemMinus:
+                if (ScrollSpeedSlider.Value > ScrollSpeedSlider.Minimum)
+                {
+                    ScrollSpeedSlider.Value -= _appSettings.KeyboardScrollSpeedIncrement;
+                }
+                e.Handled = true;
+                break;
+        }
+    }
 }

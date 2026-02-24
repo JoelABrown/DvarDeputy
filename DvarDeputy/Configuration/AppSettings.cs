@@ -62,4 +62,8 @@ public class AppSettings
     /// The short name of the ATEM output to which the viewer is routed
     /// </summary>
     public string ViewerAtemOutput { get; set; } = "PGM";
+    /// <summary>
+    /// The change in the scroll speed when a faster/slower keyboard press is captured
+    /// </summary>
+    public double KeyboardScrollSpeedIncrement { get; set; } = 0.01;
 }

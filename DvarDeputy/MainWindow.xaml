@@ -13,7 +13,10 @@
         MinWidth="630"
         Background="{StaticResource DarkBackgroundBrush}"
         Loaded="Window_Loaded"
-        Closing="Window_Closing">
+        Closing="Window_Closing"
+        Activated="Window_Activated"
+        Deactivated="Window_Deactivated"
+        PreviewKeyDown="Window_PreviewKeyDown">
     <Grid Background="{StaticResource DarkBackgroundBrush}">
         <TextBlock x:Name="LowerRightCornerStatusMessages"
                    HorizontalAlignment="Right"
@@ -208,6 +211,15 @@
                                        Grid.Column="1"
                                        Margin="0 5 0 0"
                                        Width="60" />
+                            <TextBlock x:Name="ScrollSpeedKeyCue"
+                                       Grid.Row="8"
+                                       Grid.Column="1"
+                                       Text="- +"
+                                       TextAlignment="Right"
+                                       FontWeight="DemiBold"
+                                       Foreground="Yellow"
+                                       Margin="0 5 0 0"
+                                       Width="60" />
                             <Slider x:Name="ScrollSpeedSlider"
                                     Grid.Row="8"
                                     Grid.Column="2"
@@ -246,8 +258,25 @@
                                 Height="80"
                                 Style="{StaticResource RunButtonStyle}"
                                 Click="PageBackButton_Click">
-                            <TextBlock TextAlignment="Center"
-                                       Text="Page&#xa;Back" />
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.Row="0"
+                                           FontSize="10"
+                                           Text=" " />
+                                <TextBlock Grid.Row="1"
+                                           TextAlignment="Center"
+                                           Text="Page&#xa;Back" />
+                                <TextBlock x:Name="PageBackKeyCue"
+                                    Grid.Row="2"
+                                           Text="&#x2b9d;"
+                                           FontSize="10"
+                                           Foreground="Yellow"
+                                           TextAlignment="Center" />
+                            </Grid>
                         </Button>
                         <Button x:Name="ScrollBackButton"
                                 Margin="0,8,8,0"
@@ -260,8 +289,25 @@
                                 Height="80"
                                 Click="ScrollBackButton_Click"
                                 Style="{StaticResource RunButtonStyle}">
-                            <TextBlock TextAlignment="Center"
-                                       Text="Scroll&#xa;Back" />
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.Row="0"
+                                           FontSize="10"
+                                           Text=" " />
+                                <TextBlock Grid.Row="1"
+                                           TextAlignment="Center"
+                                           Text="Scroll&#xa;Back" />
+                                <TextBlock x:Name="ScrollBackKeyCue"
+                                           Grid.Row="2"
+                                           Text="&#x2b9c;"
+                                           Foreground="Yellow"
+                                           FontSize="10"
+                                           TextAlignment="Center" />
+                            </Grid>
                         </Button>
                         <Button x:Name="StopScrollingButton"
                                 Margin="0,8,8,0"
@@ -274,8 +320,25 @@
                                 Height="80"
                                 Style="{StaticResource RunButtonStyle}"
                                 Click="StopScrollingButton_Click">
-                            <TextBlock TextAlignment="Center"
-                                       Text="Stop&#xa;Scroll" />
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.Row="0"
+                                           FontSize="10"
+                                           Text=" " />
+                                <TextBlock Grid.Row="1"
+                                           TextAlignment="Center"
+                                           Text="Stop&#xa;Scroll" />
+                                <TextBlock x:Name="StopScrollKeyCue"
+                                           Grid.Row="2"
+                                           Text="[space]"
+                                           Foreground="Yellow"
+                                           FontSize="10"
+                                           TextAlignment="Center" />
+                            </Grid>
                         </Button>
                         <Button x:Name="StartScrollingButton"
                                 Margin="0,8,8,0"
@@ -288,8 +351,25 @@
                                 Height="80"
                                 Style="{StaticResource RunButtonStyle}"
                                 Click="StartScrollingButton_Click">
-                            <TextBlock TextAlignment="Center"
-                                       Text="Scroll&#xa;Forward" />
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.Row="0"
+                                           FontSize="10"
+                                           Text=" " />
+                                <TextBlock Grid.Row="1"
+                                           TextAlignment="Center"
+                                           Text="Scroll&#xa;Forward" />
+                                <TextBlock x:Name="ScrollForwardKeyCue"
+                                           Grid.Row="2"
+                                           Text="&#x2b9e;"
+                                           Foreground="Yellow"
+                                           FontSize="10"
+                                           TextAlignment="Center" />
+                            </Grid>
                         </Button>
                         <Button x:Name="PageForwardButton"
                                 Margin="0,8,8,0"
@@ -303,8 +383,25 @@
                                 Height="80"
                                 Style="{StaticResource RunButtonStyle}"
                                 Click="PageForwardButton_Click">
-                            <TextBlock TextAlignment="Center"
-                                       Text="Page&#xa;Forward" />
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.Row="0"
+                                           FontSize="10"
+                                           Text=" " />
+                                <TextBlock Grid.Row="1"
+                                           TextAlignment="Center"
+                                           Text="Page&#xa;Forward" />
+                                <TextBlock x:Name="PageForwardKeyCue"
+                                           Grid.Row="2"
+                                           Foreground="Yellow"
+                                           Text="&#x2b9f;"
+                                           FontSize="10"
+                                           TextAlignment="Center" />
+                            </Grid>
                         </Button>
                         <GroupBox Header="Viewer"
                                   DockPanel.Dock="Right">
